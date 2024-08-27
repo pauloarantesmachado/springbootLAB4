@@ -1,25 +1,36 @@
 package br.gov.fatec.springLab4.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.List;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import jakarta.persistence.*;
 
 @Entity
-@Table(name="user")
+@Table(name="usr_usuario")
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name="usr_id")
+    @JsonView(Views.UserInfo.class)
     private Long id;
 
     @Column(name="usr_nome")
+    @JsonView(Views.UserInfo.class)
     private String nome;
 
     @Column(name="usr_senha")
     private String senha;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Anotation> anotation;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "uau_usuario_autorizacao",
+            joinColumns = { @JoinColumn(name = "usr_id")},
+            inverseJoinColumns = { @JoinColumn(name = "aut_id")})
+    private Set<Authorization> autorizacoes;
 
     public User(){
 
